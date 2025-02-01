@@ -1,0 +1,5 @@
+fastapi[standard]
+# uvicorn
+cassandra-driver
+python-dotenv
+cqlsh

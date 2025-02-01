@@ -5,5 +5,4 @@ from pydantic import BaseModel
 
 
 class Prompts(BaseModel):
-    id: int
     prompt: str

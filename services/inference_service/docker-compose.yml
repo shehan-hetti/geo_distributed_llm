@@ -1,0 +1,34 @@
+services:
+  cassandra:
+    image: cassandra
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=inference_cluster
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'DESCRIBE KEYSPACES'"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  inference_service:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      cassandra:
+        condition: service_healthy
+    volumes:
+      - ./app:/app
+    command: >
+      sh -c "while ! cqlsh cassandra -e 'DESCRIBE KEYSPACES'; do
+              echo 'Waiting for Cassandra...';
+              sleep 5;
+            done &&
+            cqlsh cassandra -f /app/create_llm_data.cql &&
+            uvicorn main:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  cassandra-data:
