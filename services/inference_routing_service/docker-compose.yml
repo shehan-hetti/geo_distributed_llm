@@ -1,0 +1,10 @@
+services:
+  inference_router_server:
+    container_name: inference_router_server
+    command: python ./main.py
+    ports:
+       - "50051:50051"
+    build:
+      context: .
+      dockerfile: Dockerfile
+
