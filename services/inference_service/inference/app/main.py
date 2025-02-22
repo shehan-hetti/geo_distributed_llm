@@ -1,22 +1,31 @@
 from fastapi import FastAPI
-from models import Prompts
+# from models import Prompts
 
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
-from uuid import UUID, uuid4
+from uuid import uuid4
+
+from pydantic import BaseModel
 
 # cluster = Cluster(['0.0.0.0'], port=9042)
 # session = cluster.connect('llm_data')
 # Cassandra connection setup
-auth_provider = PlainTextAuthProvider(username='cassandra', password='cassandra')
+auth_provider = PlainTextAuthProvider(
+    username='cassandra', password='cassandra')
 cluster = Cluster(['cassandra'], port=9042, auth_provider=auth_provider)
 session = cluster.connect('llm_data')
 
 app = FastAPI()
 
+
+class Prompts(BaseModel):
+    prompt: str
+
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Geo-Distributed Large Language Model Serving and Fine-Tuning Platform"}
+
 
 @app.get("/prompts")
 async def get_prompts() -> list[Prompts]:

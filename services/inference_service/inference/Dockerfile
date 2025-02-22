@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file
-COPY app/requirements.txt .
+COPY requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
@@ -27,3 +27,5 @@ EXPOSE 8000
 
 # Command to run the application
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0","--port", "8000"]
+# CMD ["tail", "-f", "/dev/null"]
