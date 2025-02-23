@@ -1,5 +1,12 @@
 # Python
 venv/
+.venv/
+env/
+ENV/
+env.bak/
+ENV.bak/
+*.log
+*.pot
 __pycache__/
 *.pyc
 *.pyo

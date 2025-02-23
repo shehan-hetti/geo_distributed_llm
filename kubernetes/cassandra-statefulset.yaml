@@ -17,7 +17,7 @@ spec:
       containers:
         - name: cassandra
           image: shehanhetti/cassandra:latest
-          imagePullPolicy: IfNotPresent # Change this if container is in a registry
+          imagePullPolicy: Never # Change this if container is in a registry
           ports:
             - containerPort: 9042
           env:

@@ -1,6 +1,8 @@
 fastapi[standard]
 pydantic
-# uvicorn
+uvicorn
 cassandra-driver
 python-dotenv
 cqlsh
+grpcio
+grpcio-tools

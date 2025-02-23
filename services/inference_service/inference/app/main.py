@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI
 # from models import Prompts
 
@@ -7,6 +8,13 @@ from uuid import uuid4
 
 from pydantic import BaseModel
 
+import grpc
+# from inferencerouter_pb2 import RouterRequest
+# from inferencerouter_pb2_grpc import RouterStub
+from pb.inferencerouter_pb2 import RouterRequest
+from pb.inferencerouter_pb2_grpc import RouterStub
+
+
 # cluster = Cluster(['0.0.0.0'], port=9042)
 # session = cluster.connect('llm_data')
 # Cassandra connection setup
@@ -14,6 +22,11 @@ auth_provider = PlainTextAuthProvider(
     username='cassandra', password='cassandra')
 cluster = Cluster(['cassandra'], port=9042, auth_provider=auth_provider)
 session = cluster.connect('llm_data')
+
+# gRPC client setup
+# Replace with your gRPC server address
+grpc_channel = grpc.insecure_channel('inference-routing-service:50051')
+grpc_client = RouterStub(grpc_channel)
 
 app = FastAPI()
 
@@ -42,5 +55,12 @@ async def create_todo(prompts: Prompts):
         'INSERT INTO prompts (id, prompt) VALUES (?, ?)')
     id = uuid4()
     session.execute(prepared_statement, [id, prompts.prompt])
+
+    logging.info('create_todo called')
+
+    # Send the prompt to the gRPC server
+    grpc_request = RouterRequest(current_node=prompts.prompt)
+    grpc_response = grpc_client.GetRoute(grpc_request)
+    print("gRPC Response:", grpc_response.next_node)
 
     return {"message": "prompt received successfully"}

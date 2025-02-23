@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference-routing-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inference-routing-service
+  template:
+    metadata:
+      labels:
+        app: inference-routing-service
+    spec:
+      containers:
+        - name: inference-routing-service
+          image: shehanhetti/inference-router-service:latest
+          imagePullPolicy: Never # Change this if container is in a registry
+          ports:
+            - containerPort: 50051
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inference-routing-service
+spec:
+  selector:
+    app: inference-routing-service
+  ports:
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051
+  type: ClusterIP

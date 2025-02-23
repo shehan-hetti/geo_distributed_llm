@@ -16,7 +16,8 @@ spec:
       containers:
         - name: inference-service
           image: shehanhetti/inference-service:latest
-          imagePullPolicy: IfNotPresent # Change this if container is in a registry
+          workingDir: /app
+          imagePullPolicy: Never # Change this if container is in a registry
           ports:
             - containerPort: 8000
           env:
