@@ -1,34 +1,31 @@
 import logging  
+import json
   
 from grpc import StatusCode  
 from grpc_interceptor.exceptions import NotFound, GrpcException  
   
-from pb.inferencerouter_pb2 import RouterResponse  
-from pb.inferencerouter_pb2_grpc import RouterServicer  
-  
-# mock_drinks = {  
-#     "coffee": 10,  
-#     "soda": 5,  
-#     "beer": 0  
-# }  
-  
+from pb.router_pb2 import RouterResponse  
+from pb.router_pb2_grpc import RouterServicer  
+
+from clients.Node1Client import Node1Client
+from clients.Node2Client import Node2Client
   
 class RouterBaseService(RouterServicer):  
       
-    def GetRoute(self, request, context): 
+    def GetResult(self, request, context): 
         logging.info('>>>>>> request:',request) 
-        # drinks_stock = mock_drinks.get(request.order)  
+        print('>>>>>> request:',request)
+
+        # route to node 1
+        json_data = Node1Client.get_hiddenstates(request.prompt)
+        # hidden_states = json.loads(json_data["hidden_states"])
+        print('>>>>>> recieved hidden_states')
+
+        logging.info('json data',json_data.items)
+
+        #route to node 2
+        output = Node2Client.get_generatedText(json_data["hidden_states"])
+        generated_text = output["generated_text"]
+        print('>>>>>> Generated Text',generated_text)
   
-        # if drinks_stock is None:  
-        #     raise GrpcException(  
-        #         details="Drink not Found",  
-        #         status_code=StatusCode.NOT_FOUND,  
-        #     )  
-  
-        # if drinks_stock == 0:  
-        #     raise NotFound(  
-        #         details="Drink out of stock",  
-        #         status_code=StatusCode.NOT_FOUND,  
-        #     )  
-  
-        return RouterResponse(next_node="Go to node 23")
+        return RouterResponse(result =generated_text)

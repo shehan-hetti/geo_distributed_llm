@@ -1,11 +1,11 @@
 import logging
 from concurrent import futures
+from config import LogSettings
 
 import grpc
 from grpc_interceptor import ExceptionToStatusInterceptor
 
-from config import LogSettings
-from pb.inferencerouter_pb2_grpc import add_RouterServicer_to_server
+from pb.router_pb2_grpc import add_RouterServicer_to_server
 from service.router import RouterBaseService
 
 
@@ -26,6 +26,7 @@ def serve():
 
 if __name__ == "__main__":
     logging.basicConfig(level=LogSettings.info_level, format=LogSettings.log_format)
-    logging.info('Router Service Started...')
+    logging.info('NEW Router Service Started...')
+    print("Router Service Started...") 
 
     serve()

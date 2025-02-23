@@ -28,9 +28,38 @@ services:
     ports:
       - "50051:50051"
     command: python ./main.py
+    # depends_on:
+    #   llm_node1:
+    #     condition: service_healthy
+    #   llm_node2:
+    #     condition: service_healthy
     networks:
       - inference_network
 
+  llm_node1:
+    build:
+      context: ./services/llm_module_node/gRPC/node1
+      dockerfile: Dockerfile
+    image: shehanhetti/llm_node1:latest
+    container_name: llm_node1
+    command: python3 ./main.py
+    ports:
+       - "50052:50052"
+    networks:
+      - inference_network
+
+  llm_node2:
+    build:
+      context: ./services/llm_module_node/gRPC/node2
+      dockerfile: Dockerfile
+    image: shehanhetti/llm_node2:latest
+    container_name: llm_node2
+    command: python3 ./main.py
+    ports:
+       - "50053:50053"
+    networks:
+      - inference_network
+    
   inference_service:
     build:
       context: ./services/inference_service/inference
@@ -42,6 +71,8 @@ services:
     depends_on:
       cassandra:
         condition: service_healthy
+      # inference_router_server:
+      #   condition: service_healthy
     volumes:
       - ./services/inference_service/inference/app:/app
     command: >

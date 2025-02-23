@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import pb.inferencerouter_pb2 as inferencerouter__pb2
+import pb.llm_node2_server_pb2 as llm__node2__server__pb2
 
 GRPC_GENERATED_VERSION = '1.70.0'
 GRPC_VERSION = grpc.__version__
@@ -18,14 +18,14 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in inferencerouter_pb2_grpc.py depends on'
+        + f' but the generated code in llm_node2_server_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class RouterStub(object):
+class process_part2Stub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -34,43 +34,43 @@ class RouterStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetRoute = channel.unary_unary(
-                '/router.Router/GetRoute',
-                request_serializer=inferencerouter__pb2.RouterRequest.SerializeToString,
-                response_deserializer=inferencerouter__pb2.RouterResponse.FromString,
+        self.GetGeneratedText = channel.unary_unary(
+                '/llmNode2Server.process_part2/GetGeneratedText',
+                request_serializer=llm__node2__server__pb2.LLMNode2Request.SerializeToString,
+                response_deserializer=llm__node2__server__pb2.LLMNode2Response.FromString,
                 _registered_method=True)
 
 
-class RouterServicer(object):
+class process_part2Servicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def GetRoute(self, request, context):
+    def GetGeneratedText(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_RouterServicer_to_server(servicer, server):
+def add_process_part2Servicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetRoute': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetRoute,
-                    request_deserializer=inferencerouter__pb2.RouterRequest.FromString,
-                    response_serializer=inferencerouter__pb2.RouterResponse.SerializeToString,
+            'GetGeneratedText': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetGeneratedText,
+                    request_deserializer=llm__node2__server__pb2.LLMNode2Request.FromString,
+                    response_serializer=llm__node2__server__pb2.LLMNode2Response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'router.Router', rpc_method_handlers)
+            'llmNode2Server.process_part2', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('router.Router', rpc_method_handlers)
+    server.add_registered_method_handlers('llmNode2Server.process_part2', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class Router(object):
+class process_part2(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def GetRoute(request,
+    def GetGeneratedText(request,
             target,
             options=(),
             channel_credentials=None,
@@ -83,9 +83,9 @@ class Router(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/router.Router/GetRoute',
-            inferencerouter__pb2.RouterRequest.SerializeToString,
-            inferencerouter__pb2.RouterResponse.FromString,
+            '/llmNode2Server.process_part2/GetGeneratedText',
+            llm__node2__server__pb2.LLMNode2Request.SerializeToString,
+            llm__node2__server__pb2.LLMNode2Response.FromString,
             options,
             channel_credentials,
             insecure,
