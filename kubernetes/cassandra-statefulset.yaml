@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cassandra
+spec:
+  serviceName: cassandra
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cassandra
+  template:
+    metadata:
+      labels:
+        app: cassandra
+    spec:
+      containers:
+        - name: cassandra
+          image: shehanhetti/cassandra:latest
+          imagePullPolicy: Always # Change this if container is in a registry
+          ports:
+            - containerPort: 9042
+          env:
+            - name: CASSANDRA_CLUSTER_NAME
+              value: inference_cluster
+          volumeMounts:
+            - name: cassandra-data
+              mountPath: /var/lib/cassandra
+  volumeClaimTemplates:
+    - metadata:
+        name: cassandra-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cassandra
+spec:
+  clusterIP: None
+  selector:
+    app: cassandra
+  ports:
+    - port: 9042
+      targetPort: 9042

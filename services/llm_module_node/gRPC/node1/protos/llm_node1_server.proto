@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package llmNode1Server;
+
+message LLMNode1Request {
+  string prompt = 1;
+}
+
+message LLMNode1Response {
+  string hidden_states = 1;
+}
+
+service process_part1 {
+  rpc GetHiddenStates(LLMNode1Request) returns (LLMNode1Response) {}
+}

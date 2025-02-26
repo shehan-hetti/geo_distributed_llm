@@ -1,0 +1,92 @@
+services:
+  cassandra:
+    build:
+      context: ./cassandra
+      dockerfile: Dockerfile
+    image: shehanhetti/cassandra:latest
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=inference_cluster
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'DESCRIBE KEYSPACES'"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    networks:
+      - inference_network
+
+  inference_router_server:
+    build:
+      context: ./services/inference_routing_service
+      dockerfile: Dockerfile
+    image: shehanhetti/inference-router-service:latest
+    container_name: inference-routing-service
+    ports:
+      - "50051:50051"
+    command: python ./main.py
+    # depends_on:
+    #   llm_node1:
+    #     condition: service_healthy
+    #   llm_node2:
+    #     condition: service_healthy
+    networks:
+      - inference_network
+
+  llm_node1:
+    build:
+      context: ./services/llm_module_node/gRPC/node1
+      dockerfile: Dockerfile
+    image: shehanhetti/llm-node1:latest
+    container_name: llm-node1-service
+    command: python3 ./main.py
+    ports:
+       - "50052:50052"
+    networks:
+      - inference_network
+
+  llm_node2:
+    build:
+      context: ./services/llm_module_node/gRPC/node2
+      dockerfile: Dockerfile
+    image: shehanhetti/llm-node2:latest
+    container_name: llm-node2-service
+    command: python3 ./main.py
+    ports:
+       - "50053:50053"
+    networks:
+      - inference_network
+    
+  inference_service:
+    build:
+      context: ./services/inference_service/inference
+      dockerfile: Dockerfile
+    image: shehanhetti/inference-service:latest
+    container_name: inference-service
+    ports:
+      - "8000:8000"
+    depends_on:
+      cassandra:
+        condition: service_healthy
+      # inference_router_server:
+      #   condition: service_healthy
+    volumes:
+      - ./services/inference_service/inference/app:/app
+    command: >
+      sh -c "while ! cqlsh -u cassandra -p cassandra cassandra -e 'DESCRIBE KEYSPACES'; do
+              echo 'Waiting for Cassandra...';
+              sleep 5;
+            done && 
+            uvicorn main:app --host 0.0.0.0 --port 8000"
+    networks:
+      - inference_network
+
+volumes:
+  cassandra-data:
+
+networks:
+  inference_network:
+    name: inference_network

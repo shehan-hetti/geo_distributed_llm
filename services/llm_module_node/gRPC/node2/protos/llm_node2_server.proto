@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package llmNode2Server;
+
+message LLMNode2Request {
+  string hidden_states = 1;
+  string num_return_sequences = 2;
+  string max_length = 3;
+}
+
+message LLMNode2Response {
+  string generated_text = 1;
+}
+
+service process_part2 {
+  rpc GetGeneratedText(LLMNode2Request) returns (LLMNode2Response) {}
+}

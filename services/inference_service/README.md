@@ -1,18 +1,9 @@
-<!-- docker run -it --name cassandra -p 9042:9042 cassandra
+pip install -r requirements.txt
 
-CREATE KEYSPACE llm_data WITH REPLICATION = {
-  'class' : 'SimpleStrategy', 'replication_factor' : 1
-};
-
-DESC KEYSPACE llm_data;
-
-CREATE TABLE Prompts (
-  id int PRIMARY KEY,
-  prompt text
-);
+docker compose build
 
 
-pip install "fastapi[standard]"
-pip install cassandra-driver
+navigates to kubernets dir
 
-fastapi dev main.py -->
+kubectl apply -f cassandra-statefulset.yaml
+kubectl apply -f inference-service-deployment.yaml
