@@ -26,6 +26,6 @@ def serve():
 
 if __name__ == "__main__":
     # logging.basicConfig(level=LogSettings.info_level, format=LogSettings.log_format)
-    print("Getting HiddenStates...") 
+    logging.info("Getting HiddenStates...") 
 
     serve()

@@ -40,8 +40,8 @@ services:
     build:
       context: ./services/llm_module_node/gRPC/node1
       dockerfile: Dockerfile
-    image: shehanhetti/llm_node1:latest
-    container_name: llm_node1
+    image: shehanhetti/llm-node1:latest
+    container_name: llm-node1-service
     command: python3 ./main.py
     ports:
        - "50052:50052"
@@ -52,8 +52,8 @@ services:
     build:
       context: ./services/llm_module_node/gRPC/node2
       dockerfile: Dockerfile
-    image: shehanhetti/llm_node2:latest
-    container_name: llm_node2
+    image: shehanhetti/llm-node2:latest
+    container_name: llm-node2-service
     command: python3 ./main.py
     ports:
        - "50053:50053"

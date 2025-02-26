@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm-node2-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llm-node2-service
+  template:
+    metadata:
+      labels:
+        app: llm-node2-service
+    spec:
+      containers:
+        - name: llm-node2-service
+          image: shehanhetti/llm-node2:latest
+          imagePullPolicy: Always # Change this if container is in a registry
+          ports:
+            - containerPort: 50053
+          # resources:
+          #   limits:
+          #     memory: "512Mi"
+          #     cpu: "500m"
+          #   requests:
+          #     memory: "256Mi"
+          #     cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llm-node2-service
+spec:
+  selector:
+    app: llm-node2-service
+  ports:
+    - protocol: TCP
+      port: 50053
+      targetPort: 50053
+  type: ClusterIP

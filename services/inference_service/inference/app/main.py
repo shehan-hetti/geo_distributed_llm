@@ -11,8 +11,8 @@ from pydantic import BaseModel
 import grpc
 # from inferencerouter_pb2 import RouterRequest
 # from inferencerouter_pb2_grpc import RouterStub
-from pb.inferencerouter_pb2 import RouterRequest
-from pb.inferencerouter_pb2_grpc import RouterStub
+from pb.router_pb2 import RouterRequest
+from pb.router_pb2_grpc import RouterStub
 
 
 # cluster = Cluster(['0.0.0.0'], port=9042)
@@ -59,8 +59,8 @@ async def create_todo(prompts: Prompts):
     logging.info('create_todo called')
 
     # Send the prompt to the gRPC server
-    grpc_request = RouterRequest(current_node=prompts.prompt)
-    grpc_response = grpc_client.GetRoute(grpc_request)
-    print("gRPC Response:", grpc_response.next_node)
+    grpc_request = RouterRequest(prompt=prompts.prompt)
+    grpc_response = grpc_client.GetResult(grpc_request)
+    print("gRPC Response:", grpc_response.result)
 
-    return {"message": "prompt received successfully"}
+    return {"response": grpc_response.result}

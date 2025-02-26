@@ -9,7 +9,7 @@ class Node2Client(object):
 
     def get_generatedText(hidden_states):
         # print('>>>>>> hidden_states',hidden_states)
-        channel = grpc.insecure_channel("llm_node2:50053")
+        channel = grpc.insecure_channel("llm-node2-service:50053")
         stub = process_part2Stub(channel)
         try:
             stub = stub.GetGeneratedText(LLMNode2Request(hidden_states=hidden_states,num_return_sequences="1",max_length="20"))

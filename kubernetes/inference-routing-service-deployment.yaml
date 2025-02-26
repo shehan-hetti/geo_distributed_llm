@@ -16,7 +16,7 @@ spec:
       containers:
         - name: inference-routing-service
           image: shehanhetti/inference-router-service:latest
-          imagePullPolicy: Never # Change this if container is in a registry
+          imagePullPolicy: Always # Change this if container is in a registry
           ports:
             - containerPort: 50051
           resources:

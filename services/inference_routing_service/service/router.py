@@ -25,6 +25,7 @@ class RouterBaseService(RouterServicer):
 
         #route to node 2
         output = Node2Client.get_generatedText(json_data["hidden_states"])
+        logging.info('output ',output)
         generated_text = output["generated_text"]
         print('>>>>>> Generated Text',generated_text)
   
