@@ -20,7 +20,7 @@ class GPT2Part1(nn.Module):
         for block in self.blocks:
             hidden_states = block(hidden_states)[0]
         
-        print(f"Hidden states before final layer: {hidden_states.shape}")
+        #print(f"Hidden states before final layer: {hidden_states.shape}")
 
         return hidden_states
 
@@ -41,8 +41,8 @@ class GPT2Part2(nn.Module):
             hidden_states = block(hidden_states)[0]
         hidden_states = self.ln_f(hidden_states)
         logits = self.lm_head(hidden_states)
-        print(f"Hidden states before final layer: {hidden_states.shape}")
-        print(f"Logits shape: {logits.shape}")
+        #print(f"Hidden states before final layer: {hidden_states.shape}")
+        #print(f"Logits shape: {logits.shape}")
         return logits
 
 # Save Part 2

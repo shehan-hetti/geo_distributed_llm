@@ -24,24 +24,15 @@ class PromptRequest(BaseModel):
 
 class HiddenStatesResponse(BaseModel):
     response: List[List[List[float]]]
-    #response: List[List[float]]
 
 @app.post("/process_part1", response_model=HiddenStatesResponse)
 async def process_part1(request: PromptRequest):
     inputs = tokenizer(request.prompt, return_tensors="pt")
-    print(f"Tokenized inputs: {inputs}")
 
     input_ids = inputs["input_ids"]
-    print(f"Input IDs: {input_ids}")
-
-    # Check the size of input_ids
-    print(f"Size of input_ids: {input_ids.size()}")
 
     with torch.no_grad():
         hidden_states = model_part1(input_ids)
-
-    # Check the size of the output (hidden states)
-    print(f"Size of output (hidden states): {hidden_states.size()}")
 
     return {"response": hidden_states.tolist()}
 

@@ -4,3 +4,4 @@ fastapi
 pydantic
 requests
 numpy
+re
