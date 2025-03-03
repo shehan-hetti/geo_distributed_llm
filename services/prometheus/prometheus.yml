@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 2s
+  evaluation_interval: 2s
+
+scrape_configs:
+  - job_name: 'PythonAppMetrics'
+    metrics_path: '/'
+    scrape_interval: 3s
+    static_configs:
+      - targets: ['192.168.0.194:8001']
+        labels:
+          application: 'Python Application'

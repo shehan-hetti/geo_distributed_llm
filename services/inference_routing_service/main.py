@@ -9,9 +9,6 @@ from grpc_interceptor import ExceptionToStatusInterceptor
 from pb.router_pb2_grpc import add_RouterServicer_to_server
 from service.router import RouterBaseService
 
-#Define metrics
-REQUESTS_TOTAL = Counter('inference_routing_requests_total', 'Total number of requests to Inference Routing server')
-ACTIVE_REQUESTS = Gauge('inference_routing_active_requests', 'Number of active requests to Inference Routing server')
 
 
 class RouterService(RouterBaseService):
@@ -35,7 +32,7 @@ def serve():
 
 if __name__ == "__main__":
     logging.basicConfig(level=LogSettings.info_level, format=LogSettings.log_format)
-    logging.info('NEW Router Service Started...')
+    logging.info('Router Service Started...')
     print("Router Service Started...") 
 
     serve()
