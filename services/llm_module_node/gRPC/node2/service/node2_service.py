@@ -25,23 +25,47 @@ tokenizer = AutoTokenizer.from_pretrained("gpt2")
 model_part2 = GPT2Part2(full_model)  # Initialize model structure
 model_part2.load_state_dict(torch.load("model_part2.pth", map_location="cpu"))
 model_part2.eval()
- 
-class Node2BaseService(process_part2Servicer):  
-      
-    def GetGeneratedText(self, request, context):
-        # Convert hidden states back to tensor
-        hidden_states = torch.tensor(json.loads(request.hidden_states), dtype=torch.float32)
+
+# Apply top-k and top-p filtering
+def top_k_top_p_filtering(logits, top_k=50, top_p=0.9, filter_value=-float("Inf")):
+
+    if top_k > 0:
+        top_k = min(top_k, logits.size(-1))
+        indices_to_remove = logits < torch.topk(logits, top_k)[0][:, -1, None]
+        logits[indices_to_remove] = filter_value
+
+    if top_p > 0.0 and top_p < 1.0:
+        sorted_logits, sorted_indices = torch.sort(logits, descending=True)
+        cumulative_probs = torch.cumsum(torch.nn.functional.softmax(sorted_logits, dim=-1), dim=-1)
+        sorted_indices_to_remove = cumulative_probs > top_p
+        sorted_indices_to_remove[:, 1:] = sorted_indices_to_remove[:, :-1].clone()
+        sorted_indices_to_remove[:, 0] = 0
         
-        # Debug hidden states shape
-        print(f"Hidden states shape (received at Node 2): {hidden_states.size()}")
+        indices_to_remove = sorted_indices_to_remove.scatter(1, sorted_indices, sorted_indices_to_remove)
+        logits[indices_to_remove] = filter_value
+
+    return logits
+ 
+class Node2BaseService(process_part2Servicer):     
+    
+    def GetGeneratedText(self, request, context):
+
+        # print (">>>>>>>>>>>>>>> teest",torch.tensor(request.hidden_states, dtype=torch.float32))
+        ## Convert hidden states back to tensor
+        hidden_states = torch.tensor(json.loads(request.hidden_states), dtype=torch.float32)
 
         with torch.no_grad():
+            # Get logits from the model
             logits = model_part2(hidden_states)
 
-        # Convert logits to output tokens
-        predicted_ids = torch.argmax(logits, dim=-1)
-        print(f"predicted IDs: {predicted_ids}")  
+        # Apply top-k and top-p filtering
+        logits = top_k_top_p_filtering(logits[:, -1, :], top_k=50, top_p=0.9)
 
-        output_text = tokenizer.decode(predicted_ids[0], skip_special_tokens=True)    
-  
-        return LLMNode2Response(generated_text=output_text)
+        # Sample next token using multinomial distribution
+        probabilities = torch.softmax(logits, dim=-1)
+        predicted_ids = torch.multinomial(probabilities, num_samples=1)
+
+        # Decode the new token and append to generated text
+        new_token = tokenizer.decode(predicted_ids[0], skip_special_tokens=True,clean_up_tokenization_spaces=True).strip()
+
+        return LLMNode2Response(generated_text=new_token)

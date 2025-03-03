@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16llm_node2_server.proto\x12\x0ellmNode2Server\"Z\n\x0fLLMNode2Request\x12\x15\n\rhidden_states\x18\x01 \x01(\t\x12\x1c\n\x14num_return_sequences\x18\x02 \x01(\t\x12\x12\n\nmax_length\x18\x03 \x01(\t\"*\n\x10LLMNode2Response\x12\x16\n\x0egenerated_text\x18\x01 \x01(\t2h\n\rprocess_part2\x12W\n\x10GetGeneratedText\x12\x1f.llmNode2Server.LLMNode2Request\x1a .llmNode2Server.LLMNode2Response\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x16llm_node2_server.proto\x12\x0ellmNode2Server\"F\n\x0fLLMNode2Request\x12\x15\n\rhidden_states\x18\x01 \x01(\t\x12\r\n\x05top_p\x18\x02 \x01(\x02\x12\r\n\x05top_k\x18\x03 \x01(\x05\"*\n\x10LLMNode2Response\x12\x16\n\x0egenerated_text\x18\x01 \x01(\t2h\n\rprocess_part2\x12W\n\x10GetGeneratedText\x12\x1f.llmNode2Server.LLMNode2Request\x1a .llmNode2Server.LLMNode2Response\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,9 +32,9 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'llm_node2_server_pb2', _glo
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_LLMNODE2REQUEST']._serialized_start=42
-  _globals['_LLMNODE2REQUEST']._serialized_end=132
-  _globals['_LLMNODE2RESPONSE']._serialized_start=134
-  _globals['_LLMNODE2RESPONSE']._serialized_end=176
-  _globals['_PROCESS_PART2']._serialized_start=178
-  _globals['_PROCESS_PART2']._serialized_end=282
+  _globals['_LLMNODE2REQUEST']._serialized_end=112
+  _globals['_LLMNODE2RESPONSE']._serialized_start=114
+  _globals['_LLMNODE2RESPONSE']._serialized_end=156
+  _globals['_PROCESS_PART2']._serialized_start=158
+  _globals['_PROCESS_PART2']._serialized_end=262
 # @@protoc_insertion_point(module_scope)

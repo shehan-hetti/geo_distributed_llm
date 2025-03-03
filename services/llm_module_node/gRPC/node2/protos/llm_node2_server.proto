@@ -4,8 +4,8 @@ package llmNode2Server;
 
 message LLMNode2Request {
   string hidden_states = 1;
-  string num_return_sequences = 2;
-  string max_length = 3;
+  float top_p = 2;
+  int32 top_k = 3;
 }
 
 message LLMNode2Response {

@@ -8,11 +8,11 @@ from pb.llm_node2_server_pb2_grpc import process_part2Stub
 class Node2Client(object):       
 
     def get_generatedText(hidden_states):
-        # print('>>>>>> hidden_states',hidden_states)
-        channel = grpc.insecure_channel("llm-node2-service:50053")
+        # channel = grpc.insecure_channel("llm-node2-service:50053")
+        channel = grpc.insecure_channel("localhost:50053")
         stub = process_part2Stub(channel)
         try:
-            stub = stub.GetGeneratedText(LLMNode2Request(hidden_states=hidden_states,num_return_sequences="1",max_length="20"))
+            stub = stub.GetGeneratedText(LLMNode2Request(hidden_states=hidden_states,top_k=50,top_p=0.9))
 
             return MessageToDict(
                 stub,
