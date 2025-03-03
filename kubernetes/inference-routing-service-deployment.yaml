@@ -18,7 +18,10 @@ spec:
           image: shehanhetti/inference-router-service:latest
           imagePullPolicy: Always # Change this if container is in a registry
           ports:
-            - containerPort: 50051
+            - name: grpc  # Name for the gRPC port
+              containerPort: 50051  # gRPC server port
+            - name: metrics  # Name for the metrics port
+              containerPort: 8001  # Prometheus metrics port
           resources:
             limits:
               memory: "512Mi"
@@ -35,7 +38,12 @@ spec:
   selector:
     app: inference-routing-service
   ports:
-    - protocol: TCP
+    - name: grpc
+      protocol: TCP
       port: 50051
       targetPort: 50051
+    - name: metrics
+      protocol: TCP
+      port: 8001
+      targetPort: 8001
   type: ClusterIP

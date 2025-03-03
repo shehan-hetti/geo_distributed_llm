@@ -7,6 +7,6 @@ scrape_configs:
     metrics_path: '/'
     scrape_interval: 3s
     static_configs:
-      - targets: ['192.168.0.194:8001']
+      - targets: ['inference-routing-service:8001']
         labels:
           application: 'Python Application'
