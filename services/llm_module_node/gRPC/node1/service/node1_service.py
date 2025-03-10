@@ -30,9 +30,9 @@ model_part1.eval()
 class Node1BaseService(process_part1Servicer):  
       
     def GetHiddenStates(self, request, context): 
-        logging.info('>>>>>> request:',request) 
+        logging.info("Getting hidden states ...") 
+
         inputs = tokenizer(request.prompt, return_tensors="pt")
-        print(f"Tokenized inputs: {inputs}")
 
         input_ids = inputs["input_ids"]
         print(f"Input IDs: {input_ids}")
@@ -44,8 +44,6 @@ class Node1BaseService(process_part1Servicer):
             hidden_states = model_part1(input_ids)
 
         # Check the size of the output (hidden states)
-        print(f"Size of output (hidden states): {hidden_states.size()}")  
-
-        # print(f">>>>>>>>> hidden states : {hidden_states.tolist()}")       
+        print(f"Size of output (hidden states): {hidden_states.size()}")     
   
         return LLMNode1Response(hidden_states=json.dumps(hidden_states.tolist()))

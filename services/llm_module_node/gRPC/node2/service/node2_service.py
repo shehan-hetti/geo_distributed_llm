@@ -1,3 +1,4 @@
+import logging
 from pydantic import BaseModel
 import torch
 import json
@@ -49,8 +50,8 @@ def top_k_top_p_filtering(logits, top_k=50, top_p=0.9, filter_value=-float("Inf"
 class Node2BaseService(process_part2Servicer):     
     
     def GetGeneratedText(self, request, context):
+        logging.info("Generating text ...") 
 
-        # print (">>>>>>>>>>>>>>> teest",torch.tensor(request.hidden_states, dtype=torch.float32))
         ## Convert hidden states back to tensor
         hidden_states = torch.tensor(json.loads(request.hidden_states), dtype=torch.float32)
 

@@ -1,4 +1,5 @@
 import logging
+from config import LogSettings
 from concurrent import futures
 
 import grpc
@@ -25,7 +26,8 @@ def serve():
 
 
 if __name__ == "__main__":
-    # logging.basicConfig(level=LogSettings.info_level, format=LogSettings.log_format)
-    logging.info("Getting HiddenStates...") 
+    logging.basicConfig(level=LogSettings.info_level, format=LogSettings.log_format)
+    logging.info("LLM Node 1 started ...") 
+
 
     serve()
