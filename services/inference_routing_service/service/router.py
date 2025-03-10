@@ -15,40 +15,33 @@ from clients.Node2Client import Node2Client
 
 #Define metrics
 REQUESTS_TOTAL = Counter('inference_routing_requests_total', 'Total number of requests to Inference Routing server')
-ACTIVE_REQUESTS = Gauge('inference_routing_active_requests', 'Number of active requests to Inference Routing server')
-
   
 class RouterBaseService(RouterServicer):  
       
     def GetResult(self, request, context): 
-        # Increment the counter
-        REQUESTS_TOTAL.inc()
-        logging.info('>>>>>> request:',request) 
-        print('>>>>>> request:',request)
+        logging.info('>>>>>> recieved request: ',request)
 
         # Define the number of tokens to generate
-        num_tokens_to_generate = 20
+        num_tokens_to_generate = 10
 
         # route to node 1
+        logging.info('>>>>>> routing to node 1 ...')
         json_data = Node1Client.get_hiddenstates(request.prompt)
         # hidden_states = json.loads(json_data["hidden_states"])
-        print('>>>>>> recieved hidden_states')
-
-        logging.info('json data',json_data.items)
 
         generated_text = request.prompt
 
         # loop to generate token one by one
         for _ in range(num_tokens_to_generate):
+            # Increment the counter
+            REQUESTS_TOTAL.inc()
 
             #route to node 2
+            logging.info('>>>>>> routing to node 2 ...')
             output = Node2Client.get_generatedText(json_data["hidden_states"])
-            logging.info('output ',output)
-            print('>>>>>> output',output)
-
+            
             # Extract the latest generated token            
             new_token = output["generated_text"]
-            print('>>>>>> new_token',new_token)
 
             # Append new token to the generated text
             generated_text += " " + new_token
@@ -56,9 +49,8 @@ class RouterBaseService(RouterServicer):
 
             # Update hidden states using the newly generated text
             # route to node 1
-            json_data = Node1Client.get_hiddenstates(generated_text)
-
-            print("Generated Text:", generated_text)
+            logging.info('>>>>>> routing to node 1 ...')
+            json_data = Node1Client.get_hiddenstates(generated_text)            
 
           
         return RouterResponse(result =generated_text)

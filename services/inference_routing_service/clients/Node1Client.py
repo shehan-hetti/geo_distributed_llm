@@ -8,8 +8,7 @@ from pb.llm_node1_server_pb2_grpc import process_part1Stub
 class Node1Client(object):       
 
     def get_hiddenstates(prompt):
-        # channel = grpc.insecure_channel("llm-node1-service:50052")
-        channel = grpc.insecure_channel("localhost:50052")
+        channel = grpc.insecure_channel("llm-node1-service:50052")
         stub = process_part1Stub(channel)
         try:
             stub = stub.GetHiddenStates(LLMNode1Request(prompt=prompt))

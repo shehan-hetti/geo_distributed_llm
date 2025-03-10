@@ -72,6 +72,8 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
       - "9090:9090"
+    networks:
+      - inference_network
 
   grafana:
     image: grafana/grafana
@@ -87,6 +89,8 @@ services:
       - GF_SERVER_PROTOCOL=http
     ports:
       - "3000:3000"
+    networks:
+      - inference_network
     
   inference_service:
     build:
